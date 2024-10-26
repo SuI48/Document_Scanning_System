@@ -1,0 +1,71 @@
+<div class="dashboard-container">
+  <app-sidebar></app-sidebar>
+  <div class="main-content">
+    <div class="header-card">
+      <div class="header">
+        <h1>Ayarlar - Şifre Değiştir</h1>
+      </div>
+    </div>
+    <div class="main-card">
+      <div class="settings-card">
+        <form (ngSubmit)="onSubmit(changePasswordForm)" #changePasswordForm="ngForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email Adresi</label>
+              <input type="email" id="email" name="email" ngModel [(ngModel)]="passwordData.email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$">
+              <span class="error-message" *ngIf="changePasswordForm.controls['email'].invalid && (changePasswordForm.controls['email'].dirty || changePasswordForm.controls['email'].touched)">
+                Lütfen geçerli bir email adresi giriniz!
+              </span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="currentPassword">Mevcut Şifre</label>
+              <input type="password" id="currentPassword" name="currentPassword" ngModel [(ngModel)]="passwordData.currentPassword" required>
+              <span class="error-message" *ngIf="changePasswordForm.controls['currentPassword'].invalid && (changePasswordForm.controls['currentPassword'].dirty || changePasswordForm.controls['currentPassword'].touched)">
+                Lütfen mevcut şifrenizi giriniz!
+              </span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newPassword">Yeni Şifre</label>
+              <input type="password" id="newPassword" name="newPassword" ngModel [(ngModel)]="passwordData.newPassword" minlength="8" maxlength="20" required>
+              <span class="error-message" *ngIf="changePasswordForm.controls['newPassword'].invalid && (changePasswordForm.controls['newPassword'].dirty || changePasswordForm.controls['newPassword'].touched)">
+                Şifre 8-20 karakter uzunluğunda olmalı!
+              </span>
+            </div>
+            <div class="form-group">
+              <label for="confirmNewPassword">Yeni Şifre (Tekrar)</label>
+              <input type="password" id="confirmNewPassword" name="confirmNewPassword" ngModel [(ngModel)]="passwordData.confirmNewPassword" required>
+              <span class="error-message" *ngIf="passwordMismatch && (changePasswordForm.controls['confirmNewPassword'].dirty || changePasswordForm.controls['confirmNewPassword'].touched)">
+                Şifreler uyuşmuyor.
+              </span>
+              <span class="error-message" *ngIf="changePasswordForm.controls['confirmNewPassword'].invalid && (changePasswordForm.controls['confirmNewPassword'].dirty || changePasswordForm.controls['confirmNewPassword'].touched)">
+                Lütfen yeni şifreyi tekrar giriniz.
+              </span>
+            </div>
+            
+          </div>
+          <button type="submit" class="btn-submit" [disabled]="changePasswordForm.invalid">Şifreyi Değiştir</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Başarı Popup -->
+  <div *ngIf="passwordChanged" class="popup-overlay">
+    <div class="popup-content">
+      <h3>Şifre başarıyla değiştirildi!</h3>
+      <button (click)="closeSuccessPopup()" class="btn-close-popup">Kapat</button>
+    </div>
+  </div>
+
+  <!-- Hata Popup -->
+  <div *ngIf="emailError || currentPasswordError || passwordMismatch" class="popup-overlay">
+    <div class="popup-content">
+      <h3>{{ errorMessage }}</h3>
+      <button (click)="closeErrorPopup()" class="btn-close-popup">Kapat</button>
+    </div>
+  </div>
+</div>

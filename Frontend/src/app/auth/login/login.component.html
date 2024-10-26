@@ -1,0 +1,49 @@
+<div class="login-page">
+  <div class="login-container">
+    <div class="login-left">
+      <div class="overlay"></div>
+      <div class="text-center">
+        <img src="assets/logo.png" alt="Creditwest Logo" class="logo">
+      </div>
+    </div>
+    <div class="login-right">
+      <div class="login-box">
+        <h1>Doküman Tarama Sistemi</h1>
+        <h2>Giriş Yapın</h2>
+        <form (ngSubmit)="onSubmit(loginForm)" #loginForm="ngForm">
+          <div class="form-group">
+            <label for="email">Email Adresi</label>
+            <input 
+              type="text" 
+              id="email" 
+              [(ngModel)]="model.email" 
+              name="email" 
+              required 
+              #email="ngModel"
+            >
+            <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
+              <div *ngIf="email.errors?.['required']">Kullanıcı Adı Gereklidir!</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="password">Şifre</label>
+            <input 
+              type="password" 
+              id="password" 
+              [(ngModel)]="model.password" 
+              name="password" 
+              required 
+              #password="ngModel"
+            >
+            <div *ngIf="password.invalid && (password.dirty || password.touched)" class="text-danger">
+              <div *ngIf="password.errors?.['required']">Şifre Gereklidir!</div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Giriş Yap</button>
+        </form>
+        <div *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</div>
+        <a href="#" class="forgot-password">Şifremi Unuttum?</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,331 @@
+<div class="dashboard-container">
+
+  <app-sidebar></app-sidebar>
+
+  <div class="main-content">
+
+    <div class="header-card">
+
+      <div class="header">
+
+        <h1>{{ tableTitle }}</h1>
+
+      </div>
+
+    </div>
+
+    <div class="main-card">
+
+      <div class="filter-card">
+
+        <div class="filter-container">
+
+          <!-- Müşteri Kimlik Numarası Filtresi -->
+
+          <div class="filter-group" *ngIf="!isPersonnel">
+
+            <label for="filterCustomerId">Müşteri Kimlik Numarası:</label>
+
+            <input type="text" id="filterCustomerId" [(ngModel)]="customerFilter.identityNumber" placeholder="Kimlik No...">
+
+          </div>
+
+
+
+
+          <!-- Müşteri İsmi veya Soyismi Filtresi -->
+
+          <div class="filter-group" *ngIf="!isPersonnel">
+
+            <label for="filterCustomerName">İsim/Soyisim:</label>
+
+            <input type="text" id="filterCustomerName" [(ngModel)]="customerFilter.name" placeholder="İsim veya Soyisim...">
+
+          </div>
+
+
+
+
+          <!-- Personel İsmi veya Soyismi Filtresi -->
+
+          <div class="filter-group" *ngIf="isPersonnel">
+
+            <label for="filterPersonnelName">Personel İsmi/Soyismi:</label>
+
+            <input type="text" id="filterPersonnelName" [(ngModel)]="personnelFilter.name" placeholder="İsim veya Soyisim...">
+
+          </div>
+
+
+
+
+          <!-- Personel Rolü Filtresi -->
+
+          <div class="filter-group" *ngIf="isPersonnel">
+
+            <label for="filterPersonnelRole">Personel Rolü:</label>
+
+            <input type="text" id="filterPersonnelRole" [(ngModel)]="personnelFilter.role" placeholder="Rol...">
+
+          </div>
+
+
+
+
+          <div class="filter-group button-group">
+
+            <button class="filter-btn" (click)="applyFilter()">Filtrele</button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+
+      <div class="table-container">
+
+        <div class="controls">
+
+          <div class="items-per-page">
+
+            <label for="itemsPerPage">Sayfa başına gösterilecek kullanıcı sayısı:</label>
+
+            <select id="itemsPerPage" (change)="updateItemsPerPage($event)">
+
+              <option *ngFor="let option of itemsPerPageOptions" [value]="option">{{option}}</option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th *ngFor="let column of columns">{{ column.header }}</th>
+
+                <!-- Düzenle/Sil sütunu sadece ilgili roller için gösterilir -->
+
+                <th *ngIf="(isPersonnel && currentUserRole === 'admin') || (!isPersonnel && (currentUserRole === 'admin' || currentUserRole === 'manager'))">
+
+                  Düzenle/Sil
+
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              <tr *ngFor="let item of paginatedData">
+
+                <td *ngFor="let column of columns">{{ item[column.field] }}</td>
+
+                <!-- Düzenle/Sil butonları sadece ilgili roller için gösterilir -->
+
+                <td *ngIf="(isPersonnel && currentUserRole === 'admin') || (!isPersonnel && (currentUserRole === 'admin' || currentUserRole === 'manager'))">
+
+                  <button class="edit-btn" (click)="openEditPopup(item)">Düzenle</button>
+
+                  <button class="delete-btn" (click)="deleteUser(item)">Sil</button>
+
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+        <div class="pagination">
+
+          <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">&laquo;</button>
+
+          <button class="pagination-btn" *ngFor="let page of pages" (click)="goToPage(page)" [class.active]="page === currentPage">{{page}}</button>
+
+          <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">&raquo;</button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+<!-- Düzenleme Popup -->
+
+<div *ngIf="isEditPopupOpen" class="edit-popup">
+
+  <div class="popup-content">
+
+    <h2>{{ tableTitle }} Düzenle</h2>
+
+    <form (ngSubmit)="submitEditForm()">
+
+      <div class="form-row">
+
+        <div class="form-group">
+
+          <label for="editFirstName">İsim:</label>
+
+          <input id="editFirstName" [(ngModel)]="selectedUser.firstName" name="firstName" required [ngClass]="{'invalid': isInvalid('firstName')}">
+
+          <div *ngIf="isInvalid('firstName')" class="validation-message">İsim zorunludur.</div>
+
+        </div>
+
+        <div class="form-group">
+
+          <label for="editLastName">Soyisim:</label>
+
+          <input id="editLastName" [(ngModel)]="selectedUser.lastName" name="lastName" required [ngClass]="{'invalid': isInvalid('lastName')}">
+
+          <div *ngIf="isInvalid('lastName')" class="validation-message">Soyisim zorunludur.</div>
+
+        </div>
+
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group">
+
+          <label for="editPhone">Telefon Numarası:</label>
+
+          <input id="editPhone" [(ngModel)]="selectedUser.phone" name="phone" required [ngClass]="{'invalid': isInvalid('phone')}">
+
+          <div *ngIf="isInvalid('phone')" class="validation-message">Geçerli bir telefon numarası giriniz.</div>
+
+        </div>
+
+        <div class="form-group">
+
+          <label for="editEmail">Email:</label>
+
+          <input id="editEmail" [(ngModel)]="selectedUser.email" name="email" required [ngClass]="{'invalid': isInvalid('email')}">
+
+          <div *ngIf="isInvalid('email')" class="validation-message">Geçerli bir email adresi giriniz.</div>
+
+        </div>
+
+      </div>
+
+      <div class="form-row" *ngIf="!isPersonnel">
+
+        <div class="form-group">
+
+          <label for="editId">Kimlik Numarası:</label>
+
+          <input id="editId" [(ngModel)]="selectedUser.identityNumber" name="id" required [ngClass]="{'invalid': isInvalid('identityNumber')}">
+
+          <div *ngIf="isInvalid('identityNumber')" class="validation-message">Kimlik numarası zorunludur.</div>
+
+        </div>
+
+      </div>
+
+      <div class="form-row" *ngIf="isPersonnel">
+
+        <div class="form-group role-select">
+
+          <label for="editRole">Rolü:</label>
+
+          <select id="editRole" [(ngModel)]="selectedUser.role" name="role" required [ngClass]="{'invalid': isInvalid('role')}">
+
+            <option value="Yönetici">Yönetici</option>
+
+            <option value="Personel">Personel</option>
+
+          </select>
+
+          <div *ngIf="isInvalid('role')" class="validation-message">Rolü seçiniz.</div>
+
+        </div>
+
+      </div>
+
+      <div class="button-group">
+
+        <button type="submit" class="submit-btn">Kaydet</button>
+
+        <button type="button" class="cancel-btn" (click)="closeEditPopup()">İptal</button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+
+
+<!-- Silme Onay Modalı -->
+
+<div *ngIf="isDeleteConfirmationOpen" class="modal">
+
+  <div class="modal-content">
+
+    <h2>Onayla</h2>
+
+    <p>{{ selectedUserForDeletion?.firstName }} {{ selectedUserForDeletion?.lastName }} kişisini silmekten emin misiniz?</p>
+
+    <div class="button-group">
+
+      <button (click)="confirmDelete()" class="confirm-btn">Sil</button>
+
+      <button (click)="cancelDelete()" class="cancel-btn">İptal</button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+<!-- Genel Modal -->
+
+<div *ngIf="isGeneralModalOpen" class="modal">
+
+  <div class="modal-content">
+
+    <h2>{{ generalModalTitle }}</h2>
+
+    <p>{{ generalModalMessage }}</p>
+
+    <div class="button-group">
+
+      <button (click)="closeGeneralModal()" class="confirm-btn">Tamam</button>
+
+    </div>
+
+  </div>
+
+</div>
+
+

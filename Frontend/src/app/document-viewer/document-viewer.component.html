@@ -1,0 +1,35 @@
+<div class="fullscreen-modal">
+  <div class="header">
+    <h1>{{ data.title }}</h1>
+    <div class="action-buttons">
+      <button mat-icon-button (click)="zoomIn()">
+        <mat-icon>zoom_in</mat-icon>
+      </button>
+      <button mat-icon-button (click)="zoomOut()">
+        <mat-icon>zoom_out</mat-icon>
+      </button>
+      <button mat-icon-button (click)="downloadImage()">
+        <mat-icon>download</mat-icon>
+      </button>
+      <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+    <button (click)="previousImage()" class="nav-button left-nav">←</button>
+    <div class="image-container">
+      <img [src]="images[currentIndex]" [style.transform]="'scale(' + zoomLevel + ') translate(' + translateX + 'px, ' + translateY + 'px)'" alt="Document Image" class="full-image draggable">
+    </div>
+    <button (click)="nextImage()" class="nav-button right-nav">→</button>
+  </div>
+
+  <div class="thumbnail-container">
+    <img *ngFor="let image of images; let i = index" [src]="image" (click)="selectImage(i)" [class.selected]="i === currentIndex" class="thumbnail">
+  </div>
+
+  <div class="footer">
+    <button mat-button (click)="close()">Kapat</button>
+  </div>
+</div>

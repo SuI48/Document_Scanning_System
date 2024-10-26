@@ -1,0 +1,177 @@
+<div class="dashboard-container">
+  <app-sidebar></app-sidebar>
+
+  <div class="main-content">
+    <div class="header-card">
+      <div class="header">
+        <h1 *ngIf="role === 'admin' || role === 'manager'">İşlem Geçmişi</h1>
+        <h1 *ngIf="role === 'personnel'">Taleplerim</h1>
+      </div>
+    </div>
+
+    <div class="main-card" *ngIf="role === 'admin' || role === 'manager'">
+      <div class="filter-card">
+        <div class="filter-container">
+          <div class="filter-group">
+            <label for="filterPersonnel">Personel:</label>
+            <input type="text" id="filterPersonnel" [(ngModel)]="filters.personnel" placeholder="Personel ismi...">
+          </div>
+
+          <div class="filter-group">
+            <label for="filterManager">Yönetici:</label>
+            <input type="text" id="filterManager" [(ngModel)]="filters.manager" placeholder="Yönetici ismi...">
+          </div>
+
+          <div class="filter-group">
+            <label for="filterStatus">Durum:</label>
+            <select id="filterStatus" [(ngModel)]="filters.status">
+              <option value="">Hepsi</option>
+              <option value="Onaylı">Onaylı</option>
+              <option value="Reddedildi">Reddedildi</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <div class="filter-group button-group">
+              <button class="filter-btn" (click)="applyFilters()">Filtrele</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-container">
+          <h3 class="table-title">İşlem Geçmişi</h3>
+          <div class="controls">
+            <div class="items-per-page" style="margin-left: auto;">
+              <label for="itemsPerPage">Sayfa başına gösterilecek işlem sayısı:</label>
+              <select id="itemsPerPage" (change)="updateItemsPerPage($event)">
+                <option *ngFor="let option of itemsPerPageOptions" [value]="option">{{option}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <tr>
+                <th>İşlem Türü</th>
+                <th>İşlem Detayı</th>
+                <th>İşlemi Yapan Personel</th>
+                <th>Yanıt Veren Yönetici</th>
+                <th>İlgili Müşteri</th>
+                <th>İşlem Tarihi</th>
+                <th>Durum</th>
+                <th>Yanıt Tarihi</th>
+                <th>İncele</th>
+              </tr>
+              <tr *ngFor="let request of paginatedRequests">
+                <td>{{request.type}}</td>
+                <td>{{request.details}}</td>
+                <td>{{request.personnel}}</td>
+                <td>{{request.manager}}</td>
+                <td>{{request.customer}}</td>
+                <td>{{request.date}}</td>
+                <td>{{request.status}}</td>
+                <td>{{request.responseDate}}</td>
+                <td>
+                  <button (click)="inspectRequest(request)">İncele</button>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="pagination">
+        <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">&laquo;</button>
+        <button class="pagination-btn" *ngFor="let page of pages" (click)="goToPage(page)" [class.active]="page === currentPage">{{page}}</button>
+        <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">&raquo;</button>
+      </div>
+    </div>
+
+    <div class="main-card" *ngIf="role === 'personnel'">
+      <div class="filter-card">
+        <div class="filter-container">
+          <div class="filter-group">
+            <label for="filterCustomer">Müşteri:</label>
+            <input type="text" id="filterCustomer" [(ngModel)]="filters.customer" placeholder="Müşteri adı...">
+          </div>
+          <div class="filter-group">
+            <label for="filterIdentityNumber">Müşteri Kimlik:</label>
+            <input type="text" id="filterIdentityNumber" [(ngModel)]="filters.identityNumber" placeholder="Kimlik numarası...">
+          </div>
+          <div class="filter-group">
+            <label for="filterDocumentType">İlgili Belge:</label>
+            <input type="text" id="filterDocumentType" [(ngModel)]="filters.documentType" placeholder="Belge türü...">
+          </div>
+          <div class="filter-group">
+            <label for="filterType">Talep Türü:</label>
+            <input type="text" id="filterType" [(ngModel)]="filters.type" placeholder="Talep türü...">
+          </div>
+          <div class="filter-group">
+            <label for="filterStatus">Durum:</label>
+            <select id="filterStatus" [(ngModel)]="filters.status">
+              <option value="">Hepsi</option>
+              <option value="Onaylı">Onaylı</option>
+              <option value="Bekliyor">Bekliyor</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filterManager">Yanıt Veren Yönetici:</label>
+            <input type="text" id="filterManager" [(ngModel)]="filters.manager" placeholder="Yönetici adı...">
+          </div>
+          <div class="filter-group button-group">
+            <button class="filter-btn" (click)="applyFilters()">Filtrele</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-container">
+          <h3 class="table-title">Talepler</h3>
+          <div class="controls">
+            <div class="items-per-page">
+              <label for="itemsPerPage">Sayfa başına gösterilecek talep sayısı:</label>
+              <select id="itemsPerPage" (change)="updateItemsPerPage($event)">
+                <option *ngFor="let option of itemsPerPageOptions" [value]="option">{{option}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <tr>
+                <th>Müşteri</th>
+                <th>Müşteri Kimlik Numarası</th>
+                <th>İlgili Belge</th>
+                <th>Talep Türü</th>
+                <th>Talep Oluşturulma Tarihi</th>
+                <th>Durum</th>
+                <th>Yanıt Veren Yönetici</th>
+                <th>Yanıtlanma Tarihi</th>
+                <th>İncele</th>
+              </tr>
+              <tr *ngFor="let request of paginatedRequests">
+                <td>{{request.customer}}</td>
+                <td>{{request.identityNumber}}</td>
+                <td>{{request.documentType}}</td>
+                <td>{{request.type}}</td>
+                <td>{{request.requestDate}}</td>
+                <td>{{request.status}}</td>
+                <td>{{request.manager}}</td>
+                <td>{{request.responseDate}}</td>
+                <td>
+                  <button (click)="viewDetails(request)">İncele</button>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="pagination">
+        <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">&laquo;</button>
+        <button class="pagination-btn" *ngFor="let page of pages" (click)="goToPage(page)" [class.active]="page === currentPage">{{page}}</button>
+        <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">&raquo;</button>
+      </div>
+    </div>
+  </div>
+</div>

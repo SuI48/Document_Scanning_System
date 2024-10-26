@@ -1,0 +1,77 @@
+<div class="dashboard-container">
+  <app-sidebar></app-sidebar>
+
+  <div class="main-content">
+    <div class="header-card">
+      <div class="header">
+        <h1>Hoş Geldin {{ name !== undefined ? name : 'Loading...' }} </h1>
+      </div>
+    </div>
+
+    <div class="main-card">
+      <div class="buttons-card" *ngIf="role === 'admin' || role === 'manager'">
+        <div class="buttons">
+          <div class="button" (click)="navigateTo('add-user/customer')">Müşteri Ekle</div>
+      <!--<div class="button" (click)="navigateTo('request-approve')">Talepleri Onayla/Reddet</div> -->
+          <div class="button" (click)="navigateTo('add-user/personnel')">Personel Ekle</div>
+          <div class="button" (click)="navigateTo('document-list')">Doküman Listesi ve Arama</div>
+          <div class="button" (click)="navigateTo('document-upload')">Doküman Tarama ve Yükleme</div>
+        </div>
+      </div>
+
+      <div class="buttons-card" *ngIf="role === 'personnel'">
+        <div class="buttons">
+          <div class="button" (click)="navigateTo('add-user/customer')">Müşteri Ekle</div>
+          <div class="button" (click)="navigateTo('document-upload')">Doküman Tarama ve Yükleme</div>
+          <div class="button" (click)="navigateTo('document-list')">Doküman Listesi ve Arama</div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-container">
+          <h3>Son Yüklenen Dokümanlar</h3>
+          <div class="table-wrapper">
+            <table>
+              <tr>
+                <th>Müşteri</th>
+                <th>Belge Türü</th>
+                <th>Versiyon</th>
+                <th>İşlemi Yapan Personel</th>
+                <th>Yüklenme Tarihi</th>
+                <!--<th>İncele</th>-->
+              </tr>
+              <tr *ngFor="let document of documents">
+                <td>{{ document.customerFullName }}</td>
+                <td>{{ document.documentCategory }}</td>
+                <td>{{ document.versionNumber }}</td>
+                <td>{{ document.personnelFullName }}</td>
+                <td>{{ document.submissionTime }}</td>
+               <!-- <td>
+                  <button (click)="navigateTo('document-list')">İncele</button>
+                </td>--> 
+              </tr>
+            </table>
+          </div>
+          <div class="text-right mt-3">
+            <a (click)="navigateTo('document-list')" class="btn btn-primary">Tüm Dokümanları Görüntüle</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-card">
+        <div class="stats">
+          <div class="stat">
+            <i class="bi bi-person"></i>
+            <h2>{{ customer_count !== undefined ? customer_count : 'Loading...' }}</h2>
+            <p>Müşteri Sayısı</p>
+          </div>
+          <div class="stat">
+            <i class="bi bi-file-earmark-text-fill"></i>
+            <h2>{{ document_count !== undefined ? document_count : 'Loading...' }}</h2>
+            <p>Yüklenen Doküman Sayısı</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

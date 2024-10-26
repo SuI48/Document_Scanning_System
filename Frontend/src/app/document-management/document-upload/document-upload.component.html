@@ -1,0 +1,74 @@
+<div class="dashboard-container">
+  <app-sidebar></app-sidebar>
+
+  <div class="main-content">
+    <div class="header-card">
+      <div class="header">
+        <h1>Doküman Tarama ve Yükleme</h1>
+      </div>
+    </div>
+
+    <div class="main-card">
+      <div class="scanner-container">
+        <label for="customerID">Müşteri Kimliği Girin:</label>
+        <input id="customerID" [(ngModel)]="customerID" placeholder="Müşteri Kimliği">
+        <button class="fetch-btn" (click)="fetchCustomerDetails()">Tamam</button>
+      </div>
+
+      <div *ngIf="customerFound">
+        <h4>Müşteri Bilgileri:</h4>
+        <p><strong>Adı Soyadı:</strong> {{ customer?.firstName }} {{ customer?.lastName }}</p>
+        <p><strong>Email:</strong> {{ customer?.email }}</p>
+        <p><strong>Telefon:</strong> {{ customer?.phone }}</p>
+        <br>
+        <h2>Belge Tarama</h2>
+        <div class="document-options-container">
+          <div class="document-type-container">
+            <label for="documentType">Doküman Kategorisi Seçin:</label>
+            <select id="documentType" [(ngModel)]="selectedDocumentType" [disabled]="isScanning">
+              <option value="" disabled selected hidden>Kategoriyi Seçiniz:</option>
+              <option value="identity">Kimlik Belgesi</option>
+              <option value="passport">Pasaport Belgesi</option>
+              <option value="document">Doküman</option>
+            </select>
+          </div>
+        
+          <div class="document-format-container">
+            <label for="documentFormat">Doküman Formatı Seçin:</label>
+            <select id="documentFormat" [(ngModel)]="selectedDocumentFormat" [disabled]="isScanning">
+              <option value="" disabled selected hidden>Formatı Seçiniz:</option>
+              <option value="png">PNG</option>
+              <option value="jpg">JPG</option>
+              <option value="pdf">PDF</option>
+            </select>
+          </div>
+        </div>
+        
+        <br>
+        <div class="button-container">
+          <button class="scan-btn" (click)="startScan()" [disabled]="isScanning">Doküman Taramayı Başlat</button>
+        </div>
+      </div>
+
+      <!-- Loading spinner -->
+      <div *ngIf="isScanning" class="loading-spinner"></div>
+      <br>
+      <div *ngIf="scanResult && scanResult.success" class="button-container">
+        <button class="upload-btn" (click)="uploadDocument()">Sisteme Yükle</button>
+      </div>
+
+      <div *ngIf="scanResult && !scanResult.success" class="alert">
+        {{ scanResult.message }}
+      </div>
+
+      <!-- Popup Modal -->
+      <div id="popupModal" class="popup-modal" *ngIf="showPopup">
+        <div class="popup-content">
+          <span class="close-btn" (click)="closePopup()">&times;</span>
+          <p>{{ popupMessage }}</p>
+          <button class="popup-btn" (click)="closePopup()">Tamam</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,87 @@
+<div class="dashboard-container">
+  <app-sidebar></app-sidebar>
+
+  <div class="main-content"> 
+    <div class="header-card">
+      <div class="header">
+        <h1>Döküman Listesi ve Arama</h1>
+      </div>
+    </div>
+
+    <div class="main-card">
+      <div class="filter-card">
+        <div class="filter-container">
+          <div class="filter-group">
+            <label for="filterIdentity">Müşteri Kimlik Numarası:</label>
+            <input type="text" id="filterIdentity" [(ngModel)]="filters.customerIdentity" placeholder="Kimlik No...">
+          </div>
+          <div class="filter-group">
+            <label for="filterType">Doküman Kategorisi:</label>
+            <select id="filterType" [(ngModel)]="filters.type">
+              <option value="">Hepsi</option>
+              <option value="Kimlik">Kimlik</option>
+              <option value="Pasaport">Pasaport</option>
+              <option value="Doküman">Doküman</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filterPersonnel">İşlemi Yapan Personel:</label>
+            <input type="text" id="filterPersonnel" [(ngModel)]="filters.personnel" placeholder="Personel adı...">
+          </div>
+          <div class="filter-group button-group">
+            <button class="filter-btn" (click)="applyFilters()">Filtrele</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-container">
+          <h3 class="table-title">Dokümanlar</h3>
+          <div class="controls">
+            <div class="items-per-page">
+              <label for="itemsPerPage">Sayfa başına gösterilecek belge sayısı:</label>
+              <select id="itemsPerPage" (change)="updateItemsPerPage($event)">
+                <option *ngFor="let option of itemsPerPageOptions" [value]="option">{{option}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <tr>
+                <th>Müşteri Numarası</th>
+                <th>Müşteri Kimlik Numarası</th>
+                <th>Müşteri İsmi</th>
+                <th>Belge Türü</th>
+                <th>Versiyon</th>
+                <th>İşlemi Yapan Personel</th>
+                <th>Yüklenme Tarihi</th>
+                <th>Doküman Formatı</th>
+                <th>İncele</th>
+              </tr>
+              <tr *ngFor="let document of paginatedDocuments">
+                <td>{{document.customerId}}</td>
+                <td>{{document.customerIdentityNumber}}</td> 
+                <td>{{document.customerFullName}}</td>
+                <td>{{document.documentCategory}}</td>
+                <td>{{document.versionNumber}}</td>
+                <td>{{document.personnelFullName}}</td>
+                <td>{{document.submissionTime}}</td>
+                <td>{{document.type}}</td>
+                <td>
+                  <button (click)="viewDetails(document)">İncele</button>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="pagination">
+        <button class="pagination-btn" (click)="previousPage()" [disabled]="currentPage === 1">&laquo;</button>
+        <button class="pagination-btn" *ngFor="let page of pages" (click)="goToPage(page)" [class.active]="page === currentPage">{{page}}</button>
+        <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">&raquo;</button>
+      </div>
+      
+    </div> 
+  </div>
+</div>

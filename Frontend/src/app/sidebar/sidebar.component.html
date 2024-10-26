@@ -1,0 +1,110 @@
+<nav class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="logo">
+    <img src="assets/logo.png" alt="Creditwest Logo">
+  </div>
+  <div class="nav-container">
+    <ul class="nav-links">
+      <!-- Dashboard Link -->
+      <li>
+        <a routerLink="/dashboard"><i class="bi bi-house-door-fill"></i> <span class="link-text">Ana Ekran</span></a>
+      </li>
+      <!-- User Management Section -->
+      <li *ngIf="role === 'admin' || role === 'manager' || role === 'personnel'"
+          (mouseenter)="isCollapsed ? openPopover($event, 'userManagement') : null"
+          (mouseleave)="isCollapsed ? closePopover() : null">
+        <a (click)="!isCollapsed ? toggleMenu('userManagement') : null" [class.active]="isMenuOpen('userManagement')">
+          <i class="bi bi-people-fill"></i> <span class="link-text">Kullanıcı Yönetimi</span>
+          <span *ngIf="!isCollapsed" class="menu-arrow" [ngClass]="{'rotated': isMenuOpen('userManagement')}">&#9660;</span>
+        </a>
+        <ul *ngIf="isMenuOpen('userManagement') && !isCollapsed" class="collapse list-unstyled show">
+          <li *ngIf="role === 'admin' || role === 'manager'"><a routerLink="/add-user/personnel"><i class="bi bi-dot"></i> Personel Ekle</a></li>
+          <li *ngIf="role === 'admin' || role === 'manager'"><a routerLink="/user-list/personnel"><i class="bi bi-dot"></i> Personel Listesi</a></li>
+          <li><a routerLink="/add-user/customer"><i class="bi bi-dot"></i> Müşteri Ekle</a></li>
+          <li><a routerLink="/user-list/customer"><i class="bi bi-dot"></i> Müşteri Listesi</a></li>
+        </ul>
+      </li>
+      <!-- Document Management Section -->
+      <li *ngIf="role === 'admin' || role === 'manager' || role === 'personnel'"
+          (mouseenter)="isCollapsed ? openPopover($event, 'documentManagement') : null"
+          (mouseleave)="isCollapsed ? closePopover() : null">
+        <a (click)="!isCollapsed ? toggleMenu('documentManagement') : null" [class.active]="isMenuOpen('documentManagement')">
+          <i class="bi bi-folder-fill"></i> <span class="link-text">Doküman Yönetimi</span>
+          <span *ngIf="!isCollapsed" class="menu-arrow" [ngClass]="{'rotated': isMenuOpen('documentManagement')}">&#9660;</span>
+        </a>
+        <ul *ngIf="isMenuOpen('documentManagement') && !isCollapsed" class="collapse list-unstyled show">
+          <li><a routerLink="/document-upload"><i class="bi bi-dot"></i> Doküman Tarama ve Yükleme</a></li>
+          <li><a routerLink="/document-list"><i class="bi bi-dot"></i> Doküman Listesi ve Arama</a></li>
+         <!-- <li><a routerLink="/document-versioning"><i class="bi bi-dot"></i> Doküman Versiyonlama</a></li>--> 
+        </ul>
+      </li>
+      <!--  
+      <li *ngIf="role === 'admin' || role === 'manager' || role === 'personnel'"
+          (mouseenter)="isCollapsed ? openPopover($event, 'requestManagement') : null"
+          (mouseleave)="isCollapsed ? closePopover() : null">
+        <a (click)="!isCollapsed ? toggleMenu('requestManagement') : null" [class.active]="isMenuOpen('requestManagement')">
+          <i class="bi bi-file-earmark-text-fill"></i> <span class="link-text">Talepleri Yönet</span>
+          <span *ngIf="!isCollapsed" class="menu-arrow" [ngClass]="{'rotated': isMenuOpen('requestManagement')}">&#9660;</span>
+        </a>
+        <ul *ngIf="isMenuOpen('requestManagement') && !isCollapsed" class="collapse list-unstyled show">
+          <li *ngIf="role === 'admin' || role === 'manager'"><a routerLink="/request-approve"><i class="bi bi-dot"></i> Talepleri Onayla/Reddet</a></li>
+          <li *ngIf="role === 'personnel'"><a routerLink="/request-history"><i class="bi bi-dot"></i> Taleplerim</a></li>
+          <li><a routerLink="/request-history"><i class="bi bi-dot"></i> Geçmiş Talepler</a></li>
+        </ul>
+      </li>
+       -->
+      
+     
+      <!-- Reports Section -->
+       <!--
+        <li *ngIf="role === 'admin' || role === 'manager'"
+          (mouseenter)="isCollapsed ? openPopover($event, 'reports') : null"
+          (mouseleave)="isCollapsed ? closePopover() : null">
+        <a (click)="!isCollapsed ? toggleMenu('reports') : null" [class.active]="isMenuOpen('reports')">
+          <i class="bi bi-bar-chart-fill"></i> <span class="link-text">Raporlar</span>
+          <span *ngIf="!isCollapsed" class="menu-arrow" [ngClass]="{'rotated': isMenuOpen('reports')}">&#9660;</span>
+        </a>
+        <ul *ngIf="isMenuOpen('reports') && !isCollapsed" class="collapse list-unstyled show">
+          <li><a routerLink="/user-activities"><i class="bi bi-dot"></i> Kullanıcı Aktiviteleri</a></li>
+        </ul>
+      </li> -->
+    
+      <!-- Settings -->
+      <li>
+        <a routerLink="/settings"><i class="bi bi-gear-fill"></i> <span class="link-text">Ayarlar</span></a>
+      </li>
+    </ul>
+  </div>
+  <div class="logout">
+    <button class="btn-logout" (click)="logout()">
+      <i class="bi bi-box-arrow-right"></i>
+      Çıkış Yap
+    </button>
+  </div>
+  <!-- Popover for Collapsed Sidebar -->
+  <div class="popover" *ngIf="showPopover" [ngStyle]="popoverStyles" (mouseenter)="keepPopoverOpen()" (mouseleave)="closePopover()">
+    <ng-container [ngSwitch]="currentMenu">
+      <ul *ngSwitchCase="'userManagement'">
+        <li *ngIf="role === 'admin' || role === 'manager'"><a routerLink="/add-user/personnel">Personel Ekle</a></li>
+        <li *ngIf="role === 'admin' || role === 'manager'"><a routerLink="/user-list/personnel">Personel Listesi</a></li>
+        <li><a routerLink="/add-user/customer">Müşteri Ekle</a></li>
+        <li><a routerLink="/user-list/customer">Müşteri Listesi</a></li>
+      </ul>
+      <ul *ngSwitchCase="'documentManagement'">
+        <li><a routerLink="/document-upload">Doküman Tarama ve Yükleme</a></li>
+        <li><a routerLink="/document-list">Doküman Listesi ve Arama</a></li>
+        <!--<li><a routerLink="/document-versioning">Doküman Versiyonlama</a></li>-->
+      </ul>
+      <!--
+      <ul *ngSwitchCase="'requestManagement'">
+        <li *ngIf="role === 'admin' || role === 'manager'"><a routerLink="/request-approve">Talepleri Onayla/Reddet</a></li>
+        <li *ngIf="role === 'personnel'"><a routerLink="/request-history">Taleplerim</a></li>
+        <li><a routerLink="/request-history">Geçmiş Talepler</a></li>
+      </ul>
+       -->
+      
+      <ul *ngSwitchCase="'reports'">
+        <li><a routerLink="/user-activities">Kullanıcı Aktiviteleri</a></li>
+      </ul>
+    </ng-container>
+  </div>
+</nav>

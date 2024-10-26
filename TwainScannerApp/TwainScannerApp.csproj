@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <PlatformTarget>x86</PlatformTarget> <!-- Ensure this matches the architecture of your dependencies -->
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="itextsharp" Version="5.5.13.4" />
+    <PackageReference Include="TwainDotNet" version="1.0.0" />
+  </ItemGroup>
+</Project>
+
+
+

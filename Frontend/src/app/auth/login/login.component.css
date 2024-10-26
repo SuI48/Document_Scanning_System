@@ -1,0 +1,121 @@
+.login-page {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+  }
+  
+  .login-container {
+    display: flex;
+    width: 100%;
+    max-width: 1650px;
+    height: 750px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px; 
+  }
+  
+  .login-left {
+    position: relative;
+    flex: 1;
+    background: linear-gradient(to right, #6ba2ff, #1a3e9a);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+  
+  .login-left .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.2);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+  
+  .login-left .text-center {
+    position: relative;
+    z-index: 1; 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    height: 100%;
+    width: 100%;
+  }
+  
+  .login-right {
+    flex: 1;
+    background-color: #e0e7ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+  
+  .login-box {
+    width: 80%;
+    max-width: 360px;
+    text-align: center;
+  }
+  
+  .logo {
+    max-width: 80%;
+    margin-bottom: 20px;
+  }
+  
+  h1, h2 {
+    margin-bottom: 20px;
+    color: #1a3e9a;
+  }
+  
+  .form-group {
+    margin-bottom: 20px; 
+    text-align: left;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  input {
+    width: 95%;
+    padding: 12px; 
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  button {
+    width: auto; 
+    padding: 10px 20px; 
+    background-color: #1a3e9a;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px; 
+  }
+  
+  button:hover {
+    background-color: #16327a;
+  }
+  
+  .forgot-password {
+    display: block;
+    margin-top: 15px;
+    color: #1a3e9a;
+    text-decoration: none;
+  }
+  
+  .forgot-password:hover {
+    text-decoration: underline;
+  }
+  

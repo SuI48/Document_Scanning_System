@@ -1,0 +1,32 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+.fullscreen-dialog .mat-dialog-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    background: rgba(0, 0, 0, 0.7);  /* Arka planı yarı saydam yap */
+    backdrop-filter: blur(5px);  /* Arka planı bulanıklaştır */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    z-index: 1000;  /* Üstte olmasını sağla */
+
+  }
+  
+  .cdk-overlay-container {
+    z-index: 1000 !important;
+  }
+  
+  .cdk-overlay-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);  /* Arka planı saydam yap */
+    backdrop-filter: blur(10px);  /* Arka planı bulanıklaştır */
+    z-index: 999 !important;
+  }
+  

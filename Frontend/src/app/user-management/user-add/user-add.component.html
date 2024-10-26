@@ -1,0 +1,82 @@
+<div class="dashboard-container">
+  <app-sidebar></app-sidebar>
+  <div class="main-content">
+    <div class="header-card">
+      <div class="header">
+        <h1>{{ isPersonnel ? 'Personel Ekle' : 'Müşteri Ekle' }}</h1>
+      </div>
+    </div>
+    <div class="main-card">
+      <div class="form-card">
+        <form (ngSubmit)="onSubmit(userForm)" #userForm="ngForm" novalidate>
+          <!-- Form Alanları -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">İsim</label>
+              <input type="text" id="firstName" name="firstName" ngModel [(ngModel)]="formModel.firstName" required>
+              <span class="error-message" *ngIf="userForm.controls['firstName'].invalid && (userForm.controls['firstName'].dirty || userForm.controls['firstName'].touched)">Lütfen isim giriniz.</span>
+            </div>
+            <div class="form-group">
+              <label for="lastName">Soy İsim</label>
+              <input type="text" id="lastName" name="lastName" ngModel [(ngModel)]="formModel.lastName" required>
+              <span class="error-message" *ngIf="userForm.controls['lastName'].invalid && (userForm.controls['lastName'].dirty || userForm.controls['lastName'].touched)">Lütfen soy isim giriniz.</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email Adresi</label>
+              <input type="email" id="email" name="email" ngModel [(ngModel)]="formModel.email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$">
+              <span class="error-message" *ngIf="userForm.controls['email'].invalid && (userForm.controls['email'].dirty || userForm.controls['email'].touched)">Lütfen geçerli bir email adresi giriniz!</span>
+            </div>
+            <div class="form-group">
+              <label for="phone">Telefon Numarası</label>
+              <input type="tel" id="phone" name="phone" ngModel [(ngModel)]="formModel.phone" required pattern="^\+?[0-9]{10,15}$">
+              <span class="error-message" *ngIf="userForm.controls['phone'].invalid && (userForm.controls['phone'].dirty || userForm.controls['phone'].touched)">Lütfen telefon numarasını doğru formatta giriniz!</span>
+            </div>
+          </div>
+          <!-- Rol Seçimi Yalnızca Personel için Geçerli -->
+          <div class="form-row" *ngIf="isPersonnel">
+            <div class="form-group">
+              <label for="password">Şifre</label>
+              <input type="password" id="password" name="password" ngModel [(ngModel)]="formModel.password" minlength="8" maxlength="20" required>
+              <span class="error-message" *ngIf="userForm.controls['password'].invalid && (userForm.controls['password'].dirty || userForm.controls['password'].touched)">Şifre 8-20 karakter uzunluğunda olmalı!</span>
+            </div>
+            <div class="form-group">
+              <label for="role">Rolü</label>
+              <select id="role" name="role" ngModel [(ngModel)]="formModel.role" required>
+                <option value="" disabled selected>Rolü Seçiniz</option>
+                <option value="Yönetici">Yönetici</option>
+                <option value="Personel">Personel</option>
+              </select>
+            </div>
+          </div>
+          <!-- Kimlik Numarası Yalnızca Müşteri için Geçerli -->
+          <div class="form-row" *ngIf="!isPersonnel">
+            <div class="form-group">
+              <label for="identityNumber">Kimlik Numarası</label>
+              <input type="text" id="identityNumber" name="identityNumber" ngModel [(ngModel)]="formModel.identityNumber" required>
+              <span class="error-message" *ngIf="userForm.controls['identityNumber'].invalid && (userForm.controls['identityNumber'].dirty || userForm.controls['identityNumber'].touched)">Lütfen kimlik numarası giriniz.</span>
+            </div>
+          </div>
+          <button type="submit" class="btn-submit">{{ isPersonnel ? 'Personeli Ekle' : 'Müşteriyi Ekle' }}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Başarı Popup -->
+  <div *ngIf="showSuccessPopup" class="popup-overlay">
+    <div class="popup-content">
+      <h3>{{ successMessage }}</h3>
+      <button (click)="closeSuccessPopup()" class="btn-close-popup">Kapat</button>
+    </div>
+  </div>
+
+  <!-- Hata Popup -->
+  <div *ngIf="showErrorPopup" class="popup-overlay">
+    <div class="popup-content">
+      <h3>Lütfen Tüm Bilgileri Uygun Formatta Doldurunuz</h3>
+      <button (click)="closeErrorPopup()" class="btn-close-popup">Kapat</button>
+    </div>
+  </div>
+</div>
